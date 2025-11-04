@@ -25,4 +25,4 @@ anvil_sepolia = "http://127.0.0.1:8545"
 anvil_fuji = "http://127.0.0.1:8546"
 [etherscan]
 sepolia = { key = "${ETHERSCAN_TOKEN}", chain = 11155111, url = "https://api.etherscan.io/v2/api?chainid=11155111" }
-fuji = { key = "${SNOWTRACE_TOKEN}", chain = 43113, url = "https://api.routescan.io/v2/network/testnet/evm/43113/etherscan" }
+fuji = { key = "verifyContract", chain = 43113, url = "https://api.routescan.io/v2/network/testnet/evm/43113/etherscan" }

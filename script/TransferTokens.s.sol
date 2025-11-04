@@ -61,14 +61,11 @@ contract TransferTokens is Script {
 
         // Prepare the CCIP message
         Client.EVM2AnyMessage memory message = Client.EVM2AnyMessage({
-            receiver: abi.encode(msg.sender), // Receiver address on the destination chain
+            receiver: abi.encode(vm.addr(vm.envUint("PRIVATE_KEY"))), // Receiver address on the destination chain
             data: abi.encode(), // No additional data
             tokenAmounts: new Client.EVMTokenAmount[](1), // Array of tokens to transfer
             feeToken: feeTokenAddress, // Fee token (native or LINK)
-            extraArgs: abi.encodePacked(
-                bytes4(keccak256("CCIP EVMExtraArgsV1")), // Extra arguments for CCIP (versioned)
-                abi.encode(uint256(0)) // Placeholder for future use
-            )
+            extraArgs: ""
         });
 
         // Set the token and amount to transfer
