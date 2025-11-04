@@ -1,13 +1,12 @@
 // SPDX-License-Identifier: MIT
-pragma solidity 0.8.24;
+pragma solidity ^0.8.24;
 
 import {Script, console} from "forge-std/Script.sol";
 import {HelperUtils} from "./utils/HelperUtils.s.sol"; // Utility functions for JSON parsing and chain info
 import {HelperConfig} from "./HelperConfig.s.sol"; // Network configuration helper
 import {ChainNameResolver} from "./utils/ChainNameResolver.s.sol"; // Chain name resolution utility
-import {
-    RegistryModuleOwnerCustom
-} from "@chainlink/contracts-ccip/contracts/tokenAdminRegistry/RegistryModuleOwnerCustom.sol";
+import {RegistryModuleOwnerCustom} from
+    "@chainlink/contracts-ccip/contracts/tokenAdminRegistry/RegistryModuleOwnerCustom.sol";
 import {BurnMintERC20} from "@chainlink/contracts/src/v0.8/shared/token/ERC20/BurnMintERC20.sol";
 
 contract ClaimAdmin is Script {
