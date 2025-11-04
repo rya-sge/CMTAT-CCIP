@@ -9,20 +9,14 @@ import {TokenPool} from "@chainlink/contracts-ccip/contracts/pools/TokenPool.sol
 import {RateLimiter} from "@chainlink/contracts-ccip/contracts/libraries/RateLimiter.sol";
 
 contract ApplyChainUpdates is Script {
-    function run() external {
+    function run(uint256 remoteChainId) external {
         ChainNameResolver resolver = new ChainNameResolver();
         // Get the current chain name based on the chain ID
         string memory chainName = resolver.getChainNameSafe(block.chainid);
 
         // Construct paths to the configuration and local pool JSON files
         string memory root = vm.projectRoot();
-        string memory configPath = string.concat(root, "/script/config.json");
         string memory localPoolPath = string.concat(root, "/script/output/deployedTokenPool_", chainName, ".json");
-
-        // Read the remoteChainId from config.json based on the current chain ID
-        uint256 remoteChainId = HelperUtils.getUintFromJson(
-            vm, configPath, string.concat(".remoteChains.", HelperUtils.uintToStr(block.chainid))
-        );
 
         // Get the remote chain name based on the remoteChainId
         string memory remoteChainName = resolver.getChainNameSafe(remoteChainId);
@@ -53,7 +47,7 @@ contract ApplyChainUpdates is Script {
         require(remoteTokenAddress != address(0), "Invalid remote token address");
         require(remoteChainSelector != 0, "chainSelector is not defined for the remote chain");
 
-        vm.startBroadcast();
+        vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
         // Instantiate the local TokenPool contract
         TokenPool poolContract = TokenPool(poolAddress);

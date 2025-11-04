@@ -15,28 +15,18 @@ contract TransferTokens is Script {
         Link
     }
 
-    function run() external {
+    function run(uint256 amount, string memory feeType, uint256 destinationChainId) external {
         ChainNameResolver resolver = new ChainNameResolver();
         // Get the chain name based on the current chain ID
         string memory chainName = resolver.getChainNameSafe(block.chainid);
 
         // Construct paths to the configuration and token JSON files
         string memory root = vm.projectRoot();
-        string memory configPath = string.concat(root, "/script/config.json");
         string memory tokenPath = string.concat(root, "/script/output/deployedToken_", chainName, ".json");
 
         // Extract the token address from the JSON file
         address tokenAddress =
             HelperUtils.getAddressFromJson(vm, tokenPath, string.concat(".deployedToken_", chainName));
-
-        // Read the amount to transfer and feeType from config.json
-        uint256 amount = HelperUtils.getUintFromJson(vm, configPath, ".tokenAmountToTransfer");
-        string memory feeType = HelperUtils.getStringFromJson(vm, configPath, ".feeType");
-
-        // Get the destination chain ID based on the current chain ID
-        uint256 destinationChainId = HelperUtils.getUintFromJson(
-            vm, configPath, string.concat(".remoteChains.", HelperUtils.uintToStr(block.chainid))
-        );
 
         // Fetch the network configuration for the current chain
         HelperConfig helperConfig = new HelperConfig();
@@ -61,7 +51,7 @@ contract TransferTokens is Script {
             revert("Invalid fee token");
         }
 
-        vm.startBroadcast();
+        vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
         // Connect to the CCIP router contract
         IRouterClient routerContract = IRouterClient(router);

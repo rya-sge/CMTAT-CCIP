@@ -18,12 +18,12 @@ contract ClaimAdmin is Script {
         // Define paths to the necessary JSON files
         string memory root = vm.projectRoot();
         string memory deployedTokenPath = string.concat(root, "/script/output/deployedToken_", chainName, ".json");
-        string memory configPath = string.concat(root, "/script/config.json");
 
         // Extract values from the JSON files
         address tokenAddress =
             HelperUtils.getAddressFromJson(vm, deployedTokenPath, string.concat(".deployedToken_", chainName));
-        address tokenAdmin = HelperUtils.getAddressFromJson(vm, configPath, ".BnMToken.ccipAdminAddress");
+
+        address tokenAdmin = vm.addr(vm.envUint("PRIVATE_KEY"));
 
         // Fetch the network configuration
         HelperConfig helperConfig = new HelperConfig();
@@ -32,7 +32,7 @@ contract ClaimAdmin is Script {
         require(tokenAddress != address(0), "Invalid token address");
         require(registryModuleOwnerCustom != address(0), "Registry module owner custom is not defined for this network");
 
-        vm.startBroadcast();
+        vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
         claimAdminWithCCIPAdmin(tokenAddress, tokenAdmin, registryModuleOwnerCustom);
 

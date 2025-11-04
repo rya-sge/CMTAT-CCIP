@@ -14,21 +14,12 @@ import {
 } from "../lib/cmta/contracts/interfaces/technical/ICMTATConstructor.sol";
 
 contract DeployToken is Script {
-    function run() external {
+    function run(string memory name, string memory symbol, uint8 decimals) external {
         ChainNameResolver resolver = new ChainNameResolver();
         // Get the chain name based on the current chain ID
         string memory chainName = resolver.getChainNameSafe(block.chainid);
 
-        // Define the path to the config.json file
-        string memory root = vm.projectRoot();
-        string memory configPath = string.concat(root, "/script/config.json");
-
-        // Extract token parameters from the config.json file
-        string memory name = HelperUtils.getStringFromJson(vm, configPath, ".BnMToken.name");
-        string memory symbol = HelperUtils.getStringFromJson(vm, configPath, ".BnMToken.symbol");
-        uint8 decimals = uint8(HelperUtils.getUintFromJson(vm, configPath, ".BnMToken.decimals"));
-
-        vm.startBroadcast();
+        vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
         address deployer = msg.sender;
         address tokenAddress;
