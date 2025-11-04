@@ -17,4 +17,10 @@ remappings = [
 
 fs_permissions = [{ access = "read-write", path = "./" }]
 
-# See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+
+[rpc_endpoints]
+sepolia = "${SEPOLIA_RPC}"
+fuji = "${FUJI_RPC}"
+[etherscan]
+sepolia = { key = "${ETHERSCAN_TOKEN}", chain = 11155111, url = "https://api.etherscan.io/v2/api?chainid=11155111" }
+fuji = { key = "${SNOWTRACE_TOKEN}", chain = 43113, url = "https://api.routescan.io/v2/network/testnet/evm/43113/etherscan" }

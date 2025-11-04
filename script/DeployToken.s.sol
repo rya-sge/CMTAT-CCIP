@@ -4,7 +4,14 @@ pragma solidity ^0.8.24;
 import {Script, console} from "forge-std/Script.sol";
 import {HelperUtils} from "./utils/HelperUtils.s.sol"; // Utility functions for JSON parsing and chain info
 import {ChainNameResolver} from "./utils/ChainNameResolver.s.sol"; // Chain name resolution utility
-import {BurnMintERC20} from "@chainlink/contracts/src/v0.8/shared/token/ERC20/BurnMintERC20.sol";
+import {CMTATStandalone} from "../lib/cmta/contracts/deployment/CMTATStandalone.sol";
+import {
+    ICMTATConstructor,
+    IERC1643CMTAT,
+    IRuleEngine,
+    ISnapshotEngine,
+    IERC1643
+} from "../lib/cmta/contracts/interfaces/technical/ICMTATConstructor.sol";
 
 contract DeployToken is Script {
     function run() external {
@@ -20,20 +27,29 @@ contract DeployToken is Script {
         string memory name = HelperUtils.getStringFromJson(vm, configPath, ".BnMToken.name");
         string memory symbol = HelperUtils.getStringFromJson(vm, configPath, ".BnMToken.symbol");
         uint8 decimals = uint8(HelperUtils.getUintFromJson(vm, configPath, ".BnMToken.decimals"));
-        uint256 maxSupply = HelperUtils.getUintFromJson(vm, configPath, ".BnMToken.maxSupply");
-        uint256 preMint = HelperUtils.getUintFromJson(vm, configPath, ".BnMToken.preMint");
 
         vm.startBroadcast();
 
         address deployer = msg.sender;
         address tokenAddress;
 
-        BurnMintERC20 token = new BurnMintERC20(name, symbol, decimals, maxSupply, preMint);
+        ICMTATConstructor.ERC20Attributes memory ERC20Attributes =
+            ICMTATConstructor.ERC20Attributes(name, symbol, decimals);
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes = ICMTATConstructor
+            .ExtraInformationAttributes(
+            "<id>", IERC1643CMTAT.DocumentInfo("<name>", "<url>", keccak256("<documentHash>")), "<information>"
+        );
+        ICMTATConstructor.Engine memory engines =
+            ICMTATConstructor.Engine(IRuleEngine(address(0)), ISnapshotEngine(address(0)), IERC1643(address(0)));
+
+        CMTATStandalone token =
+            new CMTATStandalone(address(0), deployer, ERC20Attributes, extraInformationAttributes, engines);
         tokenAddress = address(token);
         console.log("Deployed BurnMintERC20 at:", tokenAddress);
 
         // Grant mint and burn roles to the deployer address
-        BurnMintERC20(tokenAddress).grantMintAndBurnRoles(deployer);
+        token.grantRole(token.MINTER_ROLE(), deployer);
+        token.grantRole(token.BURNER_ROLE(), deployer);
         console.log("Granted mint and burn roles to:", deployer);
 
         vm.stopBroadcast();
