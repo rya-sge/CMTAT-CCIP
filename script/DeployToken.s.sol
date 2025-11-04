@@ -21,7 +21,7 @@ contract DeployToken is Script {
 
         vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
-        address deployer = msg.sender;
+        address deployer = vm.addr(vm.envUint("PRIVATE_KEY"));
         address tokenAddress;
 
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes =
@@ -39,6 +39,7 @@ contract DeployToken is Script {
         console.log("Deployed BurnMintERC20 at:", tokenAddress);
 
         // Grant mint and burn roles to the deployer address
+        token.setCCIPAdmin(deployer);
         token.grantRole(token.MINTER_ROLE(), deployer);
         token.grantRole(token.BURNER_ROLE(), deployer);
         console.log("Granted mint and burn roles to:", deployer);

@@ -8,6 +8,7 @@ import {ChainNameResolver} from "./utils/ChainNameResolver.s.sol"; // Chain name
 import {BurnMintTokenPool} from "@chainlink/contracts-ccip/contracts/pools/BurnMintTokenPool.sol";
 import {BurnMintERC20} from "@chainlink/contracts/src/v0.8/shared/token/ERC20/BurnMintERC20.sol";
 import {IBurnMintERC20} from "@chainlink/contracts/src/v0.8/shared/token/ERC20/IBurnMintERC20.sol";
+import {CMTATStandalone} from "../lib/cmta/contracts/deployment/CMTATStandalone.sol";
 
 contract DeployBurnMintTokenPool is Script {
     function run() external {
@@ -48,7 +49,9 @@ contract DeployBurnMintTokenPool is Script {
         console.log("Burn & Mint token pool deployed to:", address(tokenPool));
 
         // Grant mint and burn roles to the token pool on the token contract
-        BurnMintERC20(tokenAddress).grantMintAndBurnRoles(address(tokenPool));
+        BurnMintERC20(tokenAddress).grantRole(BurnMintERC20(tokenAddress).MINTER_ROLE(), address(tokenPool));
+        BurnMintERC20(tokenAddress).grantRole(BurnMintERC20(tokenAddress).BURNER_ROLE(), address(tokenPool));
+        BurnMintERC20(tokenAddress).grantRole(CMTATStandalone(tokenAddress).BURNER_FROM_ROLE(), address(tokenPool));
         console.log("Granted mint and burn roles to token pool:", address(tokenPool));
 
         vm.stopBroadcast();

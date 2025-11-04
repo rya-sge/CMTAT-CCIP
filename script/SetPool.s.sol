@@ -33,7 +33,7 @@ contract SetPool is Script {
         require(poolAddress != address(0), "Invalid pool address");
         require(tokenAdminRegistry != address(0), "TokenAdminRegistry is not defined for this network");
 
-        vm.startBroadcast();
+        vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
         // Instantiate the TokenAdminRegistry contract
         TokenAdminRegistry tokenAdminRegistryContract = TokenAdminRegistry(tokenAdminRegistry);

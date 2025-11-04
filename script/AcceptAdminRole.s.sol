@@ -29,10 +29,10 @@ contract AcceptAdminRole is Script {
         require(tokenAddress != address(0), "Invalid token address");
         require(tokenAdminRegistry != address(0), "TokenAdminRegistry is not defined for this network");
 
-        vm.startBroadcast();
+        vm.startBroadcast(vm.envUint("PRIVATE_KEY"));
 
         // Get the address of the signer (the account executing the script)
-        address signer = msg.sender;
+        address signer = vm.addr(vm.envUint("PRIVATE_KEY"));
 
         // Instantiate the TokenAdminRegistry contract
         TokenAdminRegistry tokenAdminRegistryContract = TokenAdminRegistry(tokenAdminRegistry);

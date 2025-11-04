@@ -21,7 +21,7 @@ contract MintTokens is Script {
             HelperUtils.getAddressFromJson(vm, tokenPath, string.concat(".deployedToken_", chainName));
 
         // Use the sender's address as the receiver of the minted tokens
-        address receiverAddress = msg.sender;
+        address receiverAddress = vm.addr(vm.envUint("PRIVATE_KEY"));
 
         require(tokenAddress != address(0), "Invalid token address");
         require(amount > 0, "Invalid amount to mint");
