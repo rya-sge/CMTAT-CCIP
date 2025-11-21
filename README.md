@@ -102,9 +102,21 @@ Here the list of contracts called
 | 9                                      | Mint new tokens                                              | CMTAT              | `mint(address account, uint256 value)`                       | `MintTokens.s.sol`              | -                                 | [https://testnet.snowtrace.io/tx/0xacc1858294c5cbfda83f034ecb60d4911584413dcd0c3ff379421d3086ef0df0?chainid=43113](https://testnet.snowtrace.io/tx/0xacc1858294c5cbfda83f034ecb60d4911584413dcd0c3ff379421d3086ef0df0?chainid=43113) |
 | **Cross-chain Transfer**               |                                                              |                    |                                                              |                                 |                                   |                                                              |
 | 10                                     | Approve router to spend token on your behalf                 | CMTAT              | ERC-20<br />`approve(address spender, uint256 value)`        | `TransferTokens.s.sol`          | `spender`is the CCIP pool         | [https://testnet.snowtrace.io/tx/0x625c683b1946cef2db3a30001325846f04bbacaeed76cb177f7a283c9410f774?chainid=43113](https://testnet.snowtrace.io/tx/0x625c683b1946cef2db3a30001325846f04bbacaeed76cb177f7a283c9410f774?chainid=43113) |
-| 11                                     | Transfer tokens by calling `ccipSend`on the router contract  | router             | `ccipSend(uint64 destinationChainSelector, (bytes receiver, bytes data, (address token, uint256 amount)[] tokenAmounts, address feeToken, bytes extraArgs) message) payable returns (bytes32)` | `TransferTokens.s.sol`          | -                                 | [https://testnet.snowtrace.io/tx/0x7d9458696b9e0e7c67072bd2cc6802226f05316f216fcec88a39c2322359734d?chainid=43113](https://testnet.snowtrace.io/tx/0x7d9458696b9e0e7c67072bd2cc6802226f05316f216fcec88a39c2322359734d?chainid=43113) |
+| 11                                     | Transfer tokens by calling `ccipSend`on the router contract  | router             | `ccipSend(uint64 destinationChainSelector, (bytes receiver, bytes data, (address token, uint256 amount)[] tokenAmounts, address feeToken, bytes extraArgs) message) payable returns (bytes32)` | `TransferTokens.s.sol`          | -                                 | [https://testnet.snowtrace.io/tx/0x7d9458696b9e0e7c67072bd2cc6802226f05316f216fcec88a39c2322359734d?chainid=43113](https://testnet.snowtrace.io/tx/0x7d9458696b9e0e7c67072bd2cc6802226f05316f216fcec88a39c2322359734d?chainid=43113)<br />https://sepolia.etherscan.io/tx/0x43e500140c7331b03373318c45b85cb8defca51f13b32861f5b03b54c4b7963b |
+
+##### Schema
+
+Here is a schema explaining the transfer from the source chain:
+
+![ccip-transfer.drawio](./doc/ccip-transfer.drawio.png)
 
 
+
+And on the destination chain
+
+![ccip-transfer_destination.drawio](./doc/ccip-transfer_destination.drawio.png)
+
+You can find more information on the process on the [chainlink documentation](https://docs.chain.link/ccip)
 
 ### Additional Resources
 
