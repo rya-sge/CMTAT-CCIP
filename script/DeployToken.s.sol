@@ -26,10 +26,10 @@ contract DeployToken is Script {
 
         ICMTATConstructor.ERC20Attributes memory ERC20Attributes =
             ICMTATConstructor.ERC20Attributes(name, symbol, decimals);
-        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes = ICMTATConstructor
-            .ExtraInformationAttributes(
-            "<id>", IERC1643CMTAT.DocumentInfo("<name>", "<url>", keccak256("<documentHash>")), "<information>"
-        );
+        ICMTATConstructor.ExtraInformationAttributes memory extraInformationAttributes =
+            ICMTATConstructor.ExtraInformationAttributes(
+                "<id>", IERC1643CMTAT.DocumentInfo("<name>", "<url>", keccak256("<documentHash>")), "<information>"
+            );
         ICMTATConstructor.Engine memory engines =
             ICMTATConstructor.Engine(IRuleEngine(address(0)), ISnapshotEngine(address(0)), IERC1643(address(0)));
 
@@ -40,9 +40,10 @@ contract DeployToken is Script {
 
         // Grant mint and burn roles to the deployer address
         token.setCCIPAdmin(deployer);
-        token.grantRole(token.MINTER_ROLE(), deployer);
-        token.grantRole(token.BURNER_ROLE(), deployer);
-        console.log("Granted mint and burn roles to:", deployer);
+        // Uncomment to grant mint and burn roles to specific address if needed
+        // token.grantRole(token.MINTER_ROLE(), <address>);
+        // token.grantRole(token.BURNER_ROLE(), <address>);
+        // console.log("Granted mint and burn roles to:", <address>);
 
         vm.stopBroadcast();
 
